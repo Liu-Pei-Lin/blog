@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.est.dao.ClassifyMapper">
+    <resultMap id="classifyDto" type="cn.est.dto.ClassifyDto">
+        <id property="id" column="cid"></id>
+        <result property="classifyName" column="classifyName"></result>
+        <result property="icon" column="icon"></result>
+        <result property="bigIcon" column="bigIcon"></result>
+        <collection property="brandList" ofType="cn.est.dto.BrandDto">
+            <id property="id" column="cid"></id>
+            <result property="brandName" column="brandName"></result>
+            <result property="logo" column="logo"></result>
+        </collection>
+        <collection property="modelList" ofType="cn.est.dto.ModelDto">
+            <id property="id" column="id"></id>
+            <result property="modelName" column="modelName"></result>
+        </collection>
+    </resultMap>
+
+    <select id="getClassifyTree">
+        SELECT c.id AS cid,c.classifyname,c.`icon`,c.`bigIcon`,
+b.`id` AS bid,b.`brandName`,b.`logo`,m.id `mid`,m.modelName
+FROM brand_classify_relation bcr
+INNER JOIN classify c ON bcr.`classifyId` = c.`id`
+LEFT JOIN brand b ON bcr.`brandId` = b.`id`
+LEFT JOIN model m ON m.brandId = b.`id` AND m.classifyId = c.`id`
+    </select>
+
+
+
+
+
+
+    <select id="getClassifyById" resultType="cn.est.pojo.Classify">
+        select
+                id as id,
+                classifyName as classifyName,
+                icon as icon,
+                bigIcon as bigIcon,
+                description as description,
+                status as status,
+                createdUserId as createdUserId,
+                updatedUserId as updatedUserId,
+                creatdTime as creatdTime,
+                updatedTime as updatedTime,
+                isDelete as isDelete
+        from classify
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and id=#{id}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getClassifyListByMap" resultType="cn.est.pojo.Classify" parameterType="java.util.Map">
+        select
+                id as id,
+                classifyName as classifyName,
+                icon as icon,
+                bigIcon as bigIcon,
+                description as description,
+                status as status,
+                createdUserId as createdUserId,
+                updatedUserId as updatedUserId,
+                creatdTime as creatdTime,
+                updatedTime as updatedTime,
+                isDelete as isDelete
+        from classify
+        <trim prefix="where" prefixOverrides="and | or">
+                <if test="id != null and id!=''">
+                    and id=#{id}
+                </if>
+                <if test="classifyName != null and classifyName!=''">
+                    and classifyName=#{classifyName}
+                </if>
+                <if test="icon != null and icon!=''">
+                    and icon=#{icon}
+                </if>
+                <if test="bigIcon != null and bigIcon!=''">
+                    and bigIcon=#{bigIcon}
+                </if>
+                <if test="description != null and description!=''">
+                    and description=#{description}
+                </if>
+                <if test="status != null and status!=''">
+                    and status=#{status}
+                </if>
+                <if test="createdUserId != null and createdUserId!=''">
+                    and createdUserId=#{createdUserId}
+                </if>
+                <if test="updatedUserId != null and updatedUserId!=''">
+                    and updatedUserId=#{updatedUserId}
+                </if>
+                <if test="creatdTime != null and creatdTime!=''">
+                    and creatdTime=#{creatdTime}
+                </if>
+                <if test="updatedTime != null and updatedTime!=''">
+                    and updatedTime=#{updatedTime}
+                </if>
+                <if test="isDelete != null and isDelete!=''">
+                    and isDelete=#{isDelete}
+                </if>
+        </trim>
+        <if test="beginPos != null and pageSize != null ">
+            limit #{beginPos},#{pageSize}
+        </if>
+    </select>
+
+    <select id="getClassifyCountByMap" resultType="Integer"  parameterType="java.util.Map">
+        select count(*) from classify
+        <trim prefix="where" prefixOverrides="and | or">
+                <if test="id != null and id!=''">
+                    and id=#{id}
+                </if>
+                <if test="classifyName != null and classifyName!=''">
+                    and classifyName=#{classifyName}
+                </if>
+                <if test="icon != null and icon!=''">
+                    and icon=#{icon}
+                </if>
+                <if test="bigIcon != null and bigIcon!=''">
+                    and bigIcon=#{bigIcon}
+                </if>
+                <if test="description != null and description!=''">
+                    and description=#{description}
+                </if>
+                <if test="status != null and status!=''">
+                    and status=#{status}
+                </if>
+                <if test="createdUserId != null and createdUserId!=''">
+                    and createdUserId=#{createdUserId}
+                </if>
+                <if test="updatedUserId != null and updatedUserId!=''">
+                    and updatedUserId=#{updatedUserId}
+                </if>
+                <if test="creatdTime != null and creatdTime!=''">
+                    and creatdTime=#{creatdTime}
+                </if>
+                <if test="updatedTime != null and updatedTime!=''">
+                    and updatedTime=#{updatedTime}
+                </if>
+                <if test="isDelete != null and isDelete!=''">
+                    and isDelete=#{isDelete}
+                </if>
+        </trim>
+    </select>
+
+    <insert id="insertClassify" parameterType="cn.est.pojo.Classify">
+        insert into classify(
+                        classifyName,
+                        icon,
+                        bigIcon,
+                        description,
+                        status,
+                        createdUserId,
+                        updatedUserId,
+                        creatdTime,
+                        updatedTime,
+                        isDelete)
+        values(
+                     #{classifyName},
+                     #{icon},
+                     #{bigIcon},
+                     #{description},
+                     #{status},
+                     #{createdUserId},
+                     #{updatedUserId},
+                     #{creatdTime},
+                     #{updatedTime},
+                    #{isDelete})
+    </insert>
+
+    <update id="updateClassify" parameterType="cn.est.pojo.Classify">
+        update classify
+        <trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+                        <if test="classifyName != null and classifyName!=''">
+                            classifyName=#{classifyName},
+                        </if>
+                        <if test="icon != null and icon!=''">
+                            icon=#{icon},
+                        </if>
+                        <if test="bigIcon != null and bigIcon!=''">
+                            bigIcon=#{bigIcon},
+                        </if>
+                        <if test="description != null and description!=''">
+                            description=#{description},
+                        </if>
+                        <if test="status != null and status!=''">
+                            status=#{status},
+                        </if>
+                        <if test="createdUserId != null and createdUserId!=''">
+                            createdUserId=#{createdUserId},
+                        </if>
+                        <if test="updatedUserId != null and updatedUserId!=''">
+                            updatedUserId=#{updatedUserId},
+                        </if>
+                        <if test="creatdTime != null and creatdTime!=''">
+                            creatdTime=#{creatdTime},
+                        </if>
+                        <if test="updatedTime != null and updatedTime!=''">
+                            updatedTime=#{updatedTime},
+                        </if>
+                        <if test="isDelete != null and isDelete!=''">
+                            isDelete=#{isDelete}
+                        </if>
+        </trim>
+    </update>
+
+    <delete id="deleteClassifyById" parameterType="String">
+        delete from classify where id = #{id}
+    </delete>
+
+    <delete id="batchDeleteClassify" parameterType="java.util.Map">
+        delete from classify where id in (
+            <foreach collection="ids" item="id" separator=",">
+                    #{id}
+            </foreach>
+        )
+    </delete>
+</mapper>

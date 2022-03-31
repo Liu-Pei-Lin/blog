@@ -1,0 +1,38 @@
+server:
+  port: 8090
+spring:
+  #数据库
+  datasource:
+    username: root
+    password: 123456
+    port: 3306
+    url: jdbc:mysql://127.0.0.1/est?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+  #redis
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    #连接0库
+    database: 0
+
+
+ali:
+  sms:
+    accessKeyId: LTAI4G9wR2d59oANnd6TM2y4
+    accessKeySecret: F1DiGSHMxLtWWaijM6BkUtebI23bYH
+    templateCode: SMS_205466100
+    signName: 二手兔
+    domain: dysmsapi.aliyuncs.com
+    regionId: cn-hangzhou
+    version: 2017-05-25
+
+oss:
+  endPoint: oss-cn-hangzhou.aliyuncs.com
+  accessKeyId: LTAI4GHpDwB4ibs2uRMtVy4g
+  accessKeySecret: INg7cjutfKiqRJUSwn1X8jv4p82QXA
+  bucketName: esttest
+  ossWebUrl: esttest.oss-cn-hangzhou-internal.aliyuncs.com/
+
+
+
+mybatis:
+  mapper-locations: classpath:/mapper/*Mapper.xml
